@@ -47,6 +47,9 @@ export type Database = {
           tier4_discount: number;
           tier4_coupon: string;
           tier4_countries: string[];
+          trigger_type: string;
+          trigger_delay: number;
+          ab_test_enabled: boolean;
         };
       };
       analytics: {
@@ -55,6 +58,8 @@ export type Database = {
           project_id: string;
           country_code: string;
           event_type: string;
+          variant: string;
+          user_agent?: string | null;
           created_at: string;
         };
       };

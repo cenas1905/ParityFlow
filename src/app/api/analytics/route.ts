@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from 'next/server';
 export async function POST(req: NextRequest) {
   try {
     const supabase = createServerSupabase();
-    const { projectId, countryCode, eventType } = await req.json();
+    const { projectId, countryCode, eventType, variant = 'A' } = await req.json();
 
     if (!projectId || !countryCode || !eventType) {
       return NextResponse.json({ error: 'Missing params' }, { status: 400 });
@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
       project_id: projectId,
       country_code: countryCode.toUpperCase(),
       event_type: eventType,
+      variant: variant,
       user_agent: req.headers.get('user-agent') || null,
     } as unknown as never)) as unknown as { error: Error | null };
 

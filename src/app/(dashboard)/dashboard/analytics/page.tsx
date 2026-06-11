@@ -36,6 +36,20 @@ export default async function AnalyticsPage() {
   const totalClicks = events.filter(e => e.event_type === 'click').length;
   const ctr = totalImpressions > 0 ? ((totalClicks / totalImpressions) * 100).toFixed(1) : '0';
 
+  // Phase 4: A/B Testing Stats
+  const variantA = events.filter(e => e.variant === 'A');
+  const variantB = events.filter(e => e.variant === 'B');
+  
+  const aImpressions = variantA.filter(e => e.event_type === 'impression').length;
+  const aClicks = variantA.filter(e => e.event_type === 'click').length;
+  const aCtr = aImpressions > 0 ? ((aClicks / aImpressions) * 100).toFixed(1) : '0';
+
+  const bImpressions = variantB.filter(e => e.event_type === 'impression').length;
+  const bClicks = variantB.filter(e => e.event_type === 'click').length;
+  const bCtr = bImpressions > 0 ? ((bClicks / bImpressions) * 100).toFixed(1) : '0';
+  
+  const hasAbTesting = bImpressions > 0;
+
   // Ulke bazinda grupla ve gunluk verileri (chart) hazirla
   const byCountry: Record<string, { impressions: number; clicks: number }> = {};
   const byDate: Record<string, { impressions: number; clicks: number }> = {};
@@ -88,6 +102,54 @@ export default async function AnalyticsPage() {
           <p className="text-sm text-zinc-400 mt-1">Click-through Rate</p>
         </SpotlightCard>
       </div>
+
+      {/* Phase 4: A/B Testing ROI Comparison */}
+      {hasAbTesting && (
+        <SpotlightCard className="p-6 mb-8 hover:border-white/10 transition-all duration-300 bg-indigo-900/10 border-indigo-500/20">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-semibold text-white">A/B Testing ROI Proof</h2>
+            <span className="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-1 rounded-md">Live Experiment</span>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="bg-white/5 border border-white/5 rounded-xl p-4">
+              <h3 className="text-sm text-zinc-400 font-medium mb-3">Variant A (Widget Shown)</h3>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs text-zinc-500">Impressions:</span>
+                <span className="text-sm text-white font-medium">{aImpressions}</span>
+              </div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs text-zinc-500">Conversions:</span>
+                <span className="text-sm text-emerald-400 font-bold">{aClicks}</span>
+              </div>
+              <div className="w-full bg-white/5 rounded-full h-2">
+                <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${Math.min(100, Number(aCtr))}%` }}></div>
+              </div>
+              <div className="text-right text-xs mt-1 text-zinc-400">{aCtr}% CTR</div>
+            </div>
+            
+            <div className="bg-white/5 border border-white/5 rounded-xl p-4">
+              <h3 className="text-sm text-zinc-400 font-medium mb-3">Variant B (Control Group)</h3>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-xs text-zinc-500">Impressions:</span>
+                <span className="text-sm text-white font-medium">{bImpressions}</span>
+              </div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs text-zinc-500">Conversions:</span>
+                <span className="text-sm text-zinc-400 font-bold">{bClicks}</span>
+              </div>
+              <div className="w-full bg-white/5 rounded-full h-2">
+                <div className="bg-zinc-500 h-2 rounded-full" style={{ width: `${Math.min(100, Number(bCtr))}%` }}></div>
+              </div>
+              <div className="text-right text-xs mt-1 text-zinc-400">{bCtr}% CTR</div>
+            </div>
+          </div>
+          {Number(aCtr) > Number(bCtr) && (
+            <div className="mt-4 text-center text-sm text-emerald-400 font-medium">
+              ParityFlow increases your conversion rate by {((Number(aCtr) - Number(bCtr)) / (Number(bCtr) || 1) * 100).toFixed(0)}%!
+            </div>
+          )}
+        </SpotlightCard>
+      )}
 
       {/* Recharts Cizgi Grafigi */}
       <SpotlightCard className="p-6 mb-8 hover:border-white/10 transition-all duration-300">

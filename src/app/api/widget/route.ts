@@ -130,6 +130,21 @@ export async function GET(req: NextRequest) {
   if (window.__pf_loaded) return;
   window.__pf_loaded = true;
 
+  // Phase 4: A/B Testing
+  var abEnabled = ${Boolean(settings.ab_test_enabled)};
+  var variant = 'A'; // Default to showing widget
+  if (abEnabled) {
+    // Check localStorage to maintain variant across page loads
+    try {
+      variant = localStorage.getItem('__pf_variant') || (Math.random() > 0.5 ? 'A' : 'B');
+      localStorage.setItem('__pf_variant', variant);
+    } catch(e) { variant = Math.random() > 0.5 ? 'A' : 'B'; }
+  }
+
+  // Phase 4: Triggers
+  var triggerType = '${settings.trigger_type || 'immediate'}';
+  var triggerDelay = parseInt('${settings.trigger_delay || 5}', 10) * 1000;
+
   var container = document.createElement('div');
   container.id = '__pf_root';
   document.body.appendChild(container);
@@ -177,14 +192,44 @@ export async function GET(req: NextRequest) {
   wrap.innerHTML = '<div id="pf-title">${title.replace(/'/g, "\\'")}</div><div id="pf-desc">${bodyText.replace(/'/g, "\\'")}</div><div id="pf-actions"><button id="pf-cta">${ctaText.replace(/'/g, "\\'")}</button><button id="pf-close">✕</button></div>';
   shadow.appendChild(wrap);
 
-  setTimeout(function() { wrap.classList.add('show'); }, 300);
+  // Core show function
+  function showWidget() {
+    if (wrap.classList.contains('show')) return;
+    
+    // If Variant B (Control Group), don't show the widget, but fire impression
+    if (variant === 'B') {
+      fetch('${appUrl}/api/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: '${projectId}', countryCode: '${countryCode}', eventType: 'impression', variant: 'B' })
+      }).catch(function(){});
+      return;
+    }
 
-  // Analytics: gosterim kaydi
-  fetch('${appUrl}/api/analytics', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ projectId: '${projectId}', countryCode: '${countryCode}', eventType: 'impression' })
-  }).catch(function(){});
+    // Variant A: Show the widget
+    wrap.classList.add('show');
+    fetch('${appUrl}/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId: '${projectId}', countryCode: '${countryCode}', eventType: 'impression', variant: 'A' })
+    }).catch(function(){});
+  }
+
+  // Handle Triggers
+  if (triggerType === 'delay') {
+    setTimeout(showWidget, triggerDelay);
+  } else if (triggerType === 'exit_intent') {
+    var intentTriggered = false;
+    document.addEventListener('mouseleave', function(e) {
+      if (e.clientY < 0 && !intentTriggered) {
+        intentTriggered = true;
+        showWidget();
+      }
+    });
+  } else {
+    // immediate
+    setTimeout(showWidget, 300);
+  }
 
   shadow.getElementById('pf-close').onclick = function() {
     wrap.classList.remove('show');
@@ -199,7 +244,7 @@ export async function GET(req: NextRequest) {
       fetch('${appUrl}/api/analytics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId: '${projectId}', countryCode: '${countryCode}', eventType: 'click' })
+        body: JSON.stringify({ projectId: '${projectId}', countryCode: '${countryCode}', eventType: 'click', variant: variant })
       }).catch(function(){});
       setTimeout(function() {
         wrap.classList.remove('show');

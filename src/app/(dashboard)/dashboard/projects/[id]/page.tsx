@@ -167,6 +167,49 @@ export default function ProjectSettingsPage() {
                 </select>
               </Field>
             </div>
+            
+            {/* Phase 4: Advanced Triggers */}
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5 mt-4">
+              <Field label="Trigger Type" hint="When should the widget appear?">
+                <select
+                  value={settings.trigger_type || 'immediate'}
+                  onChange={(e) => update('trigger_type', e.target.value)}
+                  className={inputCls}
+                >
+                  <option value="immediate">Immediately</option>
+                  <option value="delay">Time Delay</option>
+                  <option value="exit_intent">Exit Intent (Mouse Leave)</option>
+                </select>
+              </Field>
+              {settings.trigger_type === 'delay' && (
+                <Field label="Delay (Seconds)" hint="Wait before showing">
+                  <input
+                    type="number"
+                    min="1"
+                    max="60"
+                    value={settings.trigger_delay || 5}
+                    onChange={(e) => update('trigger_delay', parseInt(e.target.value))}
+                    className={inputCls}
+                  />
+                </Field>
+              )}
+            </div>
+
+            {/* Phase 4: A/B Testing */}
+            <div className="pt-4 border-t border-white/5">
+              <label className="flex items-center gap-3 cursor-pointer p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors border border-white/5">
+                <input
+                  type="checkbox"
+                  checked={settings.ab_test_enabled || false}
+                  onChange={(e) => update('ab_test_enabled', e.target.checked)}
+                  className="w-5 h-5 rounded border-white/20 bg-black/50 text-indigo-500 focus:ring-indigo-500/50 cursor-pointer"
+                />
+                <div>
+                  <div className="text-sm font-semibold text-white">Enable A/B Testing</div>
+                  <div className="text-xs text-zinc-400">Show widget to 50% of traffic to prove ROI in analytics.</div>
+                </div>
+              </label>
+            </div>
           </div>
         </SpotlightCard>
 
