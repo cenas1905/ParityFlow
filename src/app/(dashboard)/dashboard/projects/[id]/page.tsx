@@ -292,7 +292,7 @@ export default function ProjectSettingsPage() {
             </Field>
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium py-2 rounded-lg transition-all"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-zinc-800 to-zinc-700 hover:from-zinc-700 hover:to-zinc-600 border border-white/10 shadow-lg shadow-black/20 text-white font-semibold py-2.5 rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
               onClick={() => alert('Apify scraper triggered. Check background jobs.')}
             >
               Scrape Current Price
@@ -303,10 +303,10 @@ export default function ProjectSettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/35"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:opacity-50 disabled:hover:scale-100 text-white font-bold py-3.5 rounded-xl transition-all shadow-xl shadow-indigo-500/25 border border-indigo-500/50 hover:scale-[1.02] active:scale-[0.98]"
         >
-          <Save size={16} />
-          {saving ? 'Saving...' : saved ? '✓ Saved!' : 'Save Settings'}
+          <Save size={18} className={saving ? 'animate-pulse' : ''} />
+          {saving ? 'Saving Changes...' : saved ? '✓ Successfully Saved!' : 'Save Settings'}
         </button>
       </form>
       </div>

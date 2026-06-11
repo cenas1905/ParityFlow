@@ -96,7 +96,7 @@ function UpgradeButton() {
     <CheckoutButton
       endpoint="/api/stripe/checkout"
       label="Upgrade Now →"
-      className="bg-amber-500 hover:bg-amber-400 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors"
+      className="bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-black font-bold px-6 py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98]"
     />
   );
 }

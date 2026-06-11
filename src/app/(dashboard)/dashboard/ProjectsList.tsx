@@ -90,9 +90,9 @@ export default function ProjectsList({ initialProjects, userId, isSubscribed }: 
           <button
             type="submit"
             disabled={creating}
-            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 border border-indigo-500/50 shadow-lg shadow-indigo-500/25 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
           >
-            <Plus size={16} />
+            <Plus size={16} className={creating ? 'animate-spin' : ''} />
             {creating ? 'Creating...' : 'Add Project'}
           </button>
         </form>
@@ -117,16 +117,16 @@ export default function ProjectsList({ initialProjects, userId, isSubscribed }: 
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/dashboard/projects/${project.id}`}
-                    className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-all"
+                    className="flex items-center gap-1.5 text-xs font-medium text-zinc-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-3 py-1.5 rounded-lg transition-all hover:shadow-md"
                   >
-                    <Settings size={13} />
+                    <Settings size={14} />
                     Configure
                   </Link>
                   <button
                     onClick={() => handleDelete(project.id)}
-                    className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-red-400 border border-white/10 hover:border-red-500/30 px-3 py-1.5 rounded-lg transition-all"
+                    className="flex items-center gap-1.5 text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 px-3 py-1.5 rounded-lg transition-all"
                   >
-                    <Trash2 size={13} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
@@ -140,12 +140,12 @@ export default function ProjectsList({ initialProjects, userId, isSubscribed }: 
                   </code>
                   <button
                     onClick={() => copyScript(project.id)}
-                    className="flex items-center gap-1.5 text-xs bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 px-3 py-1.5 rounded-md transition-colors flex-shrink-0"
+                    className="flex items-center gap-1.5 text-xs font-medium bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:text-indigo-200 px-3 py-1.5 rounded-md transition-all flex-shrink-0"
                   >
                     {copiedId === project.id ? (
-                      <><Check size={12} /> Copied!</>
+                      <><Check size={14} /> Copied!</>
                     ) : (
-                      <><Copy size={12} /> Copy</>
+                      <><Copy size={14} /> Copy</>
                     )}
                   </button>
                 </div>
