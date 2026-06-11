@@ -2,6 +2,7 @@ import { createServerSupabase, Database } from '@/lib/supabase';
 import { createServerComponentSupabase } from '@/lib/supabaseServer';
 import { User, CreditCard } from 'lucide-react';
 import SpotlightCard from '@/components/ui/SpotlightCard';
+import CheckoutButton from '@/components/CheckoutButton';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -58,23 +59,17 @@ export default async function SettingsPage() {
               </p>
             </div>
             {profile?.stripe_customer_id ? (
-              <form action="/api/portal" method="POST">
-                <button
-                  type="submit"
-                  className="bg-white/10 hover:bg-white/15 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors border border-white/5"
-                >
-                  Manage Billing on Stripe
-                </button>
-              </form>
+              <CheckoutButton
+                endpoint="/api/portal"
+                label="Manage Billing on Stripe"
+                className="bg-white/10 hover:bg-white/15 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors border border-white/5"
+              />
             ) : (
-              <form action="/api/stripe/checkout" method="POST">
-                <button
-                  type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors shadow-lg shadow-indigo-600/20"
-                >
-                  Upgrade to Pro ($19/mo)
-                </button>
-              </form>
+              <CheckoutButton
+                endpoint="/api/stripe/checkout"
+                label="Upgrade to Pro ($19/mo)"
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2.5 rounded-lg text-sm transition-colors shadow-lg shadow-indigo-600/20"
+              />
             )}
           </div>
         </SpotlightCard>

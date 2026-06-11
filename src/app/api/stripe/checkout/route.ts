@@ -58,9 +58,9 @@ export async function POST() {
       },
     });
 
-    return NextResponse.redirect(session.url as string, 303);
-  } catch (err) {
+    return NextResponse.json({ url: session.url });
+  } catch (err: any) {
     console.error('Checkout error:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
   }
 }

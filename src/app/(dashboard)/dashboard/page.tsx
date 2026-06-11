@@ -2,6 +2,7 @@ import { createServerSupabase, Database } from '@/lib/supabase';
 import { createServerComponentSupabase } from '@/lib/supabaseServer';
 import ProjectsList from './ProjectsList';
 import SpotlightCard from '@/components/ui/SpotlightCard';
+import CheckoutButton from '@/components/CheckoutButton';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
@@ -92,13 +93,10 @@ export default async function DashboardPage() {
 
 function UpgradeButton() {
   return (
-    <form action="/api/stripe/checkout" method="POST">
-      <button
-        type="submit"
-        className="bg-amber-500 hover:bg-amber-400 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors"
-      >
-        Upgrade Now →
-      </button>
-    </form>
+    <CheckoutButton
+      endpoint="/api/stripe/checkout"
+      label="Upgrade Now →"
+      className="bg-amber-500 hover:bg-amber-400 text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors"
+    />
   );
 }
