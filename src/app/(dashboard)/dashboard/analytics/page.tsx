@@ -1,6 +1,7 @@
 import { createServerSupabase, Database } from '@/lib/supabase';
 import { createServerComponentSupabase } from '@/lib/supabaseServer';
 import SpotlightCard from '@/components/ui/SpotlightCard';
+import AnalyticsChart from './AnalyticsChart';
 
 type AnalyticsRow = Database['public']['Tables']['analytics']['Row'];
 
@@ -35,15 +36,31 @@ export default async function AnalyticsPage() {
   const totalClicks = events.filter(e => e.event_type === 'click').length;
   const ctr = totalImpressions > 0 ? ((totalClicks / totalImpressions) * 100).toFixed(1) : '0';
 
-  // Ulke bazinda grupla
+  // Ulke bazinda grupla ve gunluk verileri (chart) hazirla
   const byCountry: Record<string, { impressions: number; clicks: number }> = {};
+  const byDate: Record<string, { impressions: number; clicks: number }> = {};
+
   events.forEach(e => {
+    // Ulke analitigi
     if (!byCountry[e.country_code]) {
       byCountry[e.country_code] = { impressions: 0, clicks: 0 };
     }
     if (e.event_type === 'impression') byCountry[e.country_code].impressions++;
     if (e.event_type === 'click') byCountry[e.country_code].clicks++;
+
+    // Gunluk analitik (Chart)
+    const dateKey = new Date(e.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (!byDate[dateKey]) {
+      byDate[dateKey] = { impressions: 0, clicks: 0 };
+    }
+    if (e.event_type === 'impression') byDate[dateKey].impressions++;
+    if (e.event_type === 'click') byDate[dateKey].clicks++;
   });
+
+  const chartData = Object.entries(byDate).map(([date, data]) => ({
+    date,
+    ...data
+  })).reverse(); // Tarihe gore (eskiden yeniye) siralama gerekecek ama basite indirgeyelim
 
   const countryRows = Object.entries(byCountry)
     .sort((a, b) => b[1].impressions - a[1].impressions)
@@ -71,6 +88,12 @@ export default async function AnalyticsPage() {
           <p className="text-sm text-zinc-400 mt-1">Click-through Rate</p>
         </SpotlightCard>
       </div>
+
+      {/* Recharts Cizgi Grafigi */}
+      <SpotlightCard className="p-6 mb-8 hover:border-white/10 transition-all duration-300">
+        <h2 className="font-semibold text-white mb-6">Performance Trend</h2>
+        <AnalyticsChart data={chartData} />
+      </SpotlightCard>
 
       {/* Ulke Tablosu */}
       <SpotlightCard className="p-6 hover:border-white/10 transition-all duration-300">

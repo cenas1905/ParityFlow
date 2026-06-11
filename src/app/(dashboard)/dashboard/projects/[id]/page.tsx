@@ -68,7 +68,8 @@ export default function ProjectSettingsPage() {
   const ctr = stats.impressions > 0 ? ((stats.clicks / stats.impressions) * 100).toFixed(1) : '0';
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div>
       <div className="flex items-center gap-3 mb-8">
         <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors">
           <ArrowLeft size={20} />
@@ -229,6 +230,33 @@ export default function ProjectSettingsPage() {
           </div>
         </SpotlightCard>
 
+        {/* Apify Rakip Fiyat Takibi */}
+        <SpotlightCard className="p-6 hover:border-white/10 transition-all duration-300">
+          <div className="flex justify-between items-center mb-5">
+            <h2 className="font-semibold text-white">Competitor Tracking (Apify)</h2>
+            <span className="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-1 rounded-md">Beta</span>
+          </div>
+          <p className="text-sm text-zinc-400 mb-4">
+            Automatically track a competitor's pricing page to compare your PPP discounts against market rates.
+          </p>
+          <div className="space-y-4">
+            <Field label="Competitor Product URL">
+              <input
+                type="url"
+                placeholder="https://competitor.com/pricing"
+                className={inputCls}
+              />
+            </Field>
+            <button
+              type="button"
+              className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium py-2 rounded-lg transition-all"
+              onClick={() => alert('Apify scraper triggered. Check background jobs.')}
+            >
+              Scrape Current Price
+            </button>
+          </div>
+        </SpotlightCard>
+
         <button
           type="submit"
           disabled={saving}
@@ -238,6 +266,58 @@ export default function ProjectSettingsPage() {
           {saving ? 'Saving...' : saved ? '✓ Saved!' : 'Save Settings'}
         </button>
       </form>
+      </div>
+
+      {/* Right Column: Live Preview */}
+      <div className="sticky top-8 self-start">
+        <SpotlightCard className="p-6 h-[600px] flex flex-col items-center justify-center relative overflow-hidden bg-zinc-950">
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px_32px]" />
+          <div className="absolute top-4 left-4 bg-white/10 px-3 py-1 rounded-full text-xs font-medium text-white/70">
+            Live Preview
+          </div>
+          
+          {/* Simulated Website Background */}
+          <div className="w-full max-w-sm h-64 border border-white/10 rounded-xl bg-zinc-900/50 shadow-2xl relative overflow-hidden flex flex-col">
+            <div className="h-6 border-b border-white/5 bg-zinc-900 flex items-center px-3 gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+            </div>
+            <div className="flex-1 p-4">
+              <div className="w-2/3 h-4 bg-white/5 rounded-full mb-3" />
+              <div className="w-full h-2 bg-white/5 rounded-full mb-2" />
+              <div className="w-4/5 h-2 bg-white/5 rounded-full mb-2" />
+              <div className="w-1/2 h-2 bg-white/5 rounded-full" />
+            </div>
+
+            {/* Simulated ParityFlow Banner */}
+            <div 
+              className="absolute w-full px-4 py-3 flex items-center justify-between border-t border-white/10 backdrop-blur-md"
+              style={{
+                backgroundColor: settings.banner_theme === 'light' ? '#fff' : settings.banner_theme === 'glass' ? 'rgba(0,0,0,0.6)' : '#000',
+                color: settings.banner_theme === 'light' ? '#000' : '#fff',
+                bottom: settings.banner_position.includes('bottom') ? 0 : 'auto',
+                top: settings.banner_position === 'top-bar' ? '24px' : 'auto',
+              }}
+            >
+              <div>
+                <p className="font-bold text-xs" style={{ color: settings.primary_color }}>
+                  {settings.banner_title || 'Purchasing Power Parity'}
+                </p>
+                <p className="text-[10px] opacity-80 mt-0.5">
+                  {(settings.banner_text || '').replace('{country}', 'Turkey').replace('{discount}', '50')}
+                </p>
+              </div>
+              <button 
+                className="text-[10px] px-2 py-1.5 rounded-md font-semibold shrink-0 ml-2"
+                style={{ backgroundColor: settings.primary_color, color: '#fff' }}
+              >
+                {settings.banner_cta || 'Claim Discount'}
+              </button>
+            </div>
+          </div>
+        </SpotlightCard>
+      </div>
     </div>
   );
 }
