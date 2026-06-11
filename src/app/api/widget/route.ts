@@ -1,15 +1,7 @@
 import { createServerSupabase, Database } from '@/lib/supabase';
 import { NextResponse, NextRequest } from 'next/server';
 
-// Ulke adlari (banner'da gosterilecek)
-const COUNTRY_NAMES: Record<string, string> = {
-  TR: 'Turkey', IN: 'India', BR: 'Brazil', MX: 'Mexico',
-  AR: 'Argentina', RU: 'Russia', ZA: 'South Africa', CO: 'Colombia',
-  CL: 'Chile', PH: 'Philippines', VN: 'Vietnam', ID: 'Indonesia',
-  PK: 'Pakistan', EG: 'Egypt', NG: 'Nigeria', BD: 'Bangladesh',
-  ES: 'Spain', IT: 'Italy', PL: 'Poland', KR: 'South Korea',
-  PT: 'Portugal', GR: 'Greece', TW: 'Taiwan', CZ: 'Czech Republic',
-};
+import { COUNTRY_NAMES } from '@/lib/countries';
 
 export async function GET(req: NextRequest) {
   const supabase = createServerSupabase();

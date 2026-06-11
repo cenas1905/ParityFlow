@@ -1,7 +1,7 @@
 import { createServerSupabase, Database } from '@/lib/supabase';
 import { createServerComponentSupabase } from '@/lib/supabaseServer';
 import ProjectsList from './ProjectsList';
-import SpotlightCard from '@/components/ui/SpotlightCard';
+import StatsCard from '@/components/dashboard/StatsCard';
 import CheckoutButton from '@/components/CheckoutButton';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -63,22 +63,19 @@ export default async function DashboardPage() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <SpotlightCard className="p-5">
-          <p className="text-sm text-zinc-400 mb-1">Total Projects</p>
-          <p className="text-3xl font-bold text-white">{projectsData?.length || 0}</p>
-        </SpotlightCard>
-        <SpotlightCard className="p-5">
-          <p className="text-sm text-zinc-400 mb-1">Plan Status</p>
-          <p className="text-3xl font-bold text-white capitalize">
-            {profileData?.subscription_status || 'Inactive'}
-          </p>
-        </SpotlightCard>
-        <SpotlightCard className="p-5">
-          <p className="text-sm text-zinc-400 mb-1">Active Widgets</p>
-          <p className="text-3xl font-bold text-white">
-            {isSubscribed ? (projectsData?.filter(p => p.is_active).length || 0) : 0}
-          </p>
-        </SpotlightCard>
+        <StatsCard 
+          title="Total Projects" 
+          value={projectsData?.length || 0} 
+        />
+        <StatsCard 
+          title="Plan Status" 
+          value={profileData?.subscription_status || 'Inactive'} 
+          valueClassName="capitalize" 
+        />
+        <StatsCard 
+          title="Active Widgets" 
+          value={isSubscribed ? (projectsData?.filter(p => p.is_active).length || 0) : 0} 
+        />
       </div>
 
       {/* Projects */}
