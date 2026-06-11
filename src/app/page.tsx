@@ -15,6 +15,12 @@ export default function LandingPage() {
           <span className="gradient-text font-extrabold tracking-tight">ParityFlow</span>
         </Link>
         <div className="flex items-center gap-6">
+          <Link href="#pricing" className="text-zinc-400 hover:text-white text-sm font-medium transition-colors hidden sm:block">
+            Pricing
+          </Link>
+          <Link href="#faq" className="text-zinc-400 hover:text-white text-sm font-medium transition-colors hidden sm:block">
+            FAQ
+          </Link>
           <Link href="/login" className="text-zinc-400 hover:text-white text-sm font-medium transition-colors">
             Sign In
           </Link>
@@ -144,7 +150,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-24 px-4 relative z-10">
+      <section id="pricing" className="py-24 px-4 relative z-10">
         <div className="max-w-md mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Simple Pricing</h2>
           <p className="text-zinc-400 mb-12">One transparent plan with everything included.</p>
@@ -182,9 +188,72 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section id="faq" className="py-24 px-4 max-w-3xl mx-auto relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Frequently Asked Questions</h2>
+        </div>
+        <div className="space-y-4">
+          {[
+            {
+              q: 'How does the IP detection work?',
+              a: 'We use high-speed edge network functions (like Vercel Edge) to detect the \'x-vercel-ip-country\' header. It\'s instantaneous and doesn\'t require external API calls or cookies.'
+            },
+            {
+              q: 'Will this slow down my website?',
+              a: 'Not at all. The widget is injected asynchronously and is incredibly lightweight (< 10kb). It won\'t block your page rendering.'
+            },
+            {
+              q: 'Does it work with Stripe / LemonSqueezy?',
+              a: 'Yes! You create the coupon codes in your own payment gateway (Stripe, LemonSqueezy, Paddle), and simply paste the code names into our dashboard. When users click "Claim", the widget copies the code to their clipboard.'
+            },
+            {
+              q: 'Can I change the colors and text?',
+              a: 'Absolutely. You can customize the primary color, theme (dark, light, glass), banner position, and all the text directly from your dashboard.'
+            }
+          ].map((faq, i) => (
+            <SpotlightCard key={i} className="p-6 hover:border-white/10 transition-all duration-300">
+              <h3 className="text-lg font-bold text-white mb-2">{faq.q}</h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">{faq.a}</p>
+            </SpotlightCard>
+          ))}
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="border-t border-white/5 py-10 px-4 text-center text-zinc-500 text-sm relative z-10 bg-[#09090b]">
-        <p>© {new Date().getFullYear()} ParityFlow. All rights reserved. Built for indie founders globally.</p>
+      <footer className="border-t border-white/5 py-12 px-8 text-zinc-500 text-sm relative z-10 bg-[#09090b]">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div className="md:col-span-2">
+            <Link href="/" className="flex items-center gap-2 font-bold text-lg mb-4">
+              <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center">
+                <Zap size={12} className="text-white fill-white" />
+              </div>
+              <span className="text-white">ParityFlow</span>
+            </Link>
+            <p className="text-zinc-400 max-w-xs leading-relaxed">
+              Helping SaaS founders globally maximize their revenue through smart, automated Purchasing Power Parity pricing.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Product</h4>
+            <ul className="space-y-2">
+              <li><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/login" className="hover:text-white transition-colors">Login</Link></li>
+              <li><Link href="/signup" className="hover:text-white transition-colors">Start Trial</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Contact Support</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto text-center border-t border-white/5 pt-8">
+          <p>© {new Date().getFullYear()} ParityFlow. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );

@@ -58,7 +58,7 @@ export async function POST() {
       },
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.redirect(session.url as string, 303);
   } catch (err) {
     console.error('Checkout error:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });

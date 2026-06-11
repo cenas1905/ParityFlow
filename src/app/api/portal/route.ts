@@ -28,7 +28,7 @@ export async function POST() {
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.redirect(session.url as string, 303);
   } catch (err) {
     console.error('Portal error:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
